@@ -220,7 +220,7 @@ function showCards() {
                   <i class="fa-solid fa-star checked"></i>
                 </div>
                 <h2>$${products[i].price} <span><a  class="add-to-cart text-dark">
-                <li class="fa-solid fa-cart-shopping"  data-name="${products[i].name}" data-price="${products[i].price}"></li></a></span></h2>
+                <li class="fa-solid fa-cart-shopping"  onClick="addToCart(${products[i].id})"></li></a></span></h2>
               <a data-bs-toggle="modal" data-bs-target="#infoModal" class="btn btn-primary w-100 ms-0"
               onclick="setModal(${i})">See more</a>
               </div>
@@ -245,7 +245,7 @@ function showCards() {
                   <i class="fa-solid fa-star checked"></i>
                 </div>
                 <h2>$${products[i].price}<span><a  class="add-to-cart text-dark">
-                <li class="fa-solid fa-cart-shopping"  data-name="${products[i].name}" data-price="${products[i].price}"></li></a></span></h2>
+                <li class="fa-solid fa-cart-shopping"  onClick="addToCart(${products[i].id})"></li></a></span></h2>
               <a data-bs-toggle="modal" data-bs-target="#infoModal" class="btn btn-primary w-100 ms-0"
                onclick="setModal(${i})">See more</a>
               </div>
@@ -270,7 +270,7 @@ function showCards() {
                   <i class="fa-solid fa-star checked"></i>
                 </div>
                 <h2>$${products[i].price}<span><a  class="add-to-cart text-dark">
-                <li class="fa-solid fa-cart-shopping"  data-name="${products[i].name}" data-price="${products[i].price}"></li></a></span></h2>
+                <li class="fa-solid fa-cart-shopping" onClick="addToCart(${products[i].id})"></li></a></span></h2>
               <a data-bs-toggle="modal" data-bs-target="#infoModal" class="btn btn-primary w-100 ms-0" 
               onclick="setModal(${i})">See more</a>
               </div>
@@ -295,246 +295,114 @@ function setModal(i) {
   <p><b>Description:</b> ${products[i].description}</p>
   <hr class="mt-1 mb-1 "/>
   <h2>$${products[i].price}<span>
-  <a  class="add-to-cart text-dark">
-                <li class="fa-solid fa-cart-shopping"  data-name="${products[i].name}" data-price="${products[i].price}"></li></a>
+  <a  class="add-to-cart text-dark" onClick="addToCart(${products[i].id})">
+                <li class="fa-solid fa-cart-shopping"  ></li></a>
   </span></h2>
 
 
   `;
 }
 
-//   <a
-//     data-bs-toggle="modal"
-//     data-name="${products[i].name}"
-//     data-price="${products[i].price}"
-//     data-bs-target="#infoModal"
-//     class="add-to-cart text-dark"
-//     onclick="setModal(${i})"
-//   >
-//     <li class="fa-solid fa-cart-shopping "></li>
-//   </a>;
+//  SHOPPING CART
 
-// ************************************************
-// Shopping Cart API
-// ************************************************
+// SELECT ELEMENTS
 
-var shoppingCart = (function () {
-  // =============================
-  // Private methods and propeties
-  // =============================
-  cart = [];
+const cartItemsModalEl = document.querySelector(".show-cart");
+const subtotalModalEl = document.querySelector(".total-price");
+const totalItemsInCartModalEl = document.querySelector(".total-count");
 
-  // Constructor
-  function Item(name, price, count) {
-    this.name = name;
-    this.price = price;
-    this.count = count;
+// cart array
+let cart = JSON.parse(localStorage.getItem("CART")) || [];
+
+updateCart();
+
+// ADD TO CART
+function addToCart(id) {
+  // check if prodcut already exist in cart
+  if (cart.some((item) => item.id === id)) {
+    changeNumberOfUnits("plus", id);
+  } else {
+    const item = products.find((product) => product.id === id);
+    cart.push({
+      ...item,
+      numberOfUnits: 1,
+    });
   }
 
-  // Save cart
-  function saveCart() {
-    sessionStorage.setItem("shoppingCart", JSON.stringify(cart));
-  }
-
-  // Load cart
-  function loadCart() {
-    cart = JSON.parse(sessionStorage.getItem("shoppingCart"));
-  }
-  if (sessionStorage.getItem("shoppingCart") != null) {
-    loadCart();
-  }
-
-  // =============================
-  // Public methods and propeties
-  // =============================
-  var obj = {};
-
-  // Add to cart
-  obj.addItemToCart = function (name, price, count) {
-    for (var item in cart) {
-      if (cart[item].name === name) {
-        cart[item].count++;
-        saveCart();
-        return;
-      }
-    }
-    var item = new Item(name, price, count);
-    cart.push(item);
-    saveCart();
-  };
-  // Set count from item
-  obj.setCountForItem = function (name, count) {
-    for (var i in cart) {
-      if (cart[i].name === name) {
-        cart[i].count = count;
-        break;
-      }
-    }
-  };
-  // Remove item from cart
-  obj.removeItemFromCart = function (name) {
-    for (var item in cart) {
-      if (cart[item].name === name) {
-        cart[item].count--;
-        if (cart[item].count === 0) {
-          cart.splice(item, 1);
-        }
-        break;
-      }
-    }
-    saveCart();
-  };
-
-  // Remove all items from cart
-  obj.removeItemFromCartAll = function (name) {
-    for (var item in cart) {
-      if (cart[item].name === name) {
-        cart.splice(item, 1);
-        break;
-      }
-    }
-    saveCart();
-  };
-
-  // Clear cart
-  obj.clearCart = function () {
-    cart = [];
-    saveCart();
-  };
-
-  // Count cart
-  obj.totalCount = function () {
-    var totalCount = 0;
-    for (var item in cart) {
-      totalCount += cart[item].count;
-    }
-    return totalCount;
-  };
-
-  // Total cart
-  obj.totalCart = function () {
-    var totalCart = 0;
-    for (var item in cart) {
-      totalCart += cart[item].price * cart[item].count;
-    }
-    return Number(totalCart.toFixed(2));
-  };
-
-  // List cart
-  obj.listCart = function () {
-    var cartCopy = [];
-    for (i in cart) {
-      item = cart[i];
-      itemCopy = {};
-      for (p in item) {
-        itemCopy[p] = item[p];
-      }
-      itemCopy.total = Number(item.price * item.count).toFixed(2);
-      cartCopy.push(itemCopy);
-    }
-    return cartCopy;
-  };
-
-  // cart : Array
-  // Item : Object/Class
-  // addItemToCart : Function
-  // removeItemFromCart : Function
-  // removeItemFromCartAll : Function
-  // clearCart : Function
-  // countCart : Function
-  // totalCart : Function
-  // listCart : Function
-  // saveCart : Function
-  // loadCart : Function
-  return obj;
-})();
-
-// *****************************************
-// Triggers / Events
-// *****************************************
-// Add item
-$(".add-to-cart").click(function (event) {
-  event.preventDefault();
-  var addToCartElement = $(".add-to-cart");
-  console.log(addToCartElement);
-  var name = $(this).data("name");
-  var price = Number($(this).data("price"));
-  console.log(name);
-  console.log(price);
-  shoppingCart.addItemToCart(name, price, 1);
-  displayCart();
-});
-
-// Clear items
-// $(".clear-cart").click(function () {
-//   shoppingCart.clearCart();
-//   displayCart();
-// });
-
-function displayCart() {
-  var cartArray = shoppingCart.listCart();
-  var output = "";
-  for (var i in cartArray) {
-    output +=
-      "<tr>" +
-      "<td>" +
-      cartArray[i].name +
-      "</td>" +
-      "<td>(" +
-      cartArray[i].price +
-      ")</td>" +
-      "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-name=" +
-      cartArray[i].name +
-      ">-</button>" +
-      "<input type='number' class='item-count form-control' data-name='" +
-      cartArray[i].name +
-      "' value='" +
-      cartArray[i].count +
-      "'>" +
-      "<button class='plus-item btn btn-primary input-group-addon' data-name=" +
-      cartArray[i].name +
-      ">+</button></div></td>" +
-      "<td><button class='delete-item btn btn-danger' data-name=" +
-      cartArray[i].name +
-      ">X</button></td>" +
-      " = " +
-      "<td>" +
-      cartArray[i].total +
-      "</td>" +
-      "</tr>";
-  }
-  $(".show-cart").html(output);
-  $(".total-cart").html(shoppingCart.totalCart());
-  $(".total-count").html(shoppingCart.totalCount());
+  updateCart();
 }
 
-// Delete item button
+// update cart
+function updateCart() {
+  renderCartItems();
+  renderSubtotal();
 
-$(".show-cart").on("click", ".delete-item", function (event) {
-  var name = $(this).data("name");
-  shoppingCart.removeItemFromCartAll(name);
-  displayCart();
-});
+  // save cart to local storage
+  localStorage.setItem("CART", JSON.stringify(cart));
+}
 
-// -1
-$(".show-cart").on("click", ".minus-item", function (event) {
-  var name = $(this).data("name");
-  shoppingCart.removeItemFromCart(name);
-  displayCart();
-});
-// +1
-$(".show-cart").on("click", ".plus-item", function (event) {
-  var name = $(this).data("name");
-  shoppingCart.addItemToCart(name);
-  displayCart();
-});
+// calculate and render subtotal
+function renderSubtotal() {
+  let totalPrice = 0,
+    totalItems = 0;
 
-// Item count input
-$(".show-cart").on("change", ".item-count", function (event) {
-  var name = $(this).data("name");
-  var count = Number($(this).val());
-  shoppingCart.setCountForItem(name, count);
-  displayCart();
-});
+  cart.forEach((item) => {
+    totalPrice += item.price * item.numberOfUnits;
+    totalItems += item.numberOfUnits;
+  });
 
-displayCart();
+  subtotalModalEl.innerHTML = `$${totalPrice.toFixed(2)}`;
+  totalItemsInCartModalEl.innerHTML = totalItems;
+}
+
+// // render cart items
+function renderCartItems() {
+  cartItemsModalEl.innerHTML = ""; // clear cart element
+  cart.forEach((item) => {
+    cartItemsModalEl.innerHTML += `
+          <div class="cart-item text-sm">
+              <div class="item-info" ">
+              <img src="${item.image}" alt="${item.name}" >
+              <h6>${item.name}</h6>
+            </div>
+            
+            <div class="unit-price">
+              <small>$</small>${item.price}
+            </div>
+            <div class="units">
+              <div class="btn minus" onclick="changeNumberOfUnits('minus', ${item.id})">-</div>
+              <div class="number">${item.numberOfUnits}</div>
+              <div class="btn plus" onclick="changeNumberOfUnits('plus', ${item.id})">+</div>
+              <i class="fa-regular fa-square-minus ms-4 fs-5" onclick="removeItemFromCart(${item.id})"></i>
+            </div>
+          </div>    `;
+  });
+}
+
+// remove item from cart
+function removeItemFromCart(id) {
+  cart = cart.filter((item) => item.id !== id);
+
+  updateCart();
+}
+
+// change number of units for an item
+function changeNumberOfUnits(action, id) {
+  cart = cart.map((item) => {
+    let numberOfUnits = item.numberOfUnits;
+    if (item.id === id) {
+      if (action === "minus" && numberOfUnits > 1) {
+        numberOfUnits--;
+      } else if (action === "plus") {
+        numberOfUnits++;
+      }
+    }
+
+    return {
+      ...item,
+      numberOfUnits,
+    };
+  });
+
+  updateCart();
+}

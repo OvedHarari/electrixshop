@@ -17,10 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
   <!-- fonts links -->
-  <!-- jQuary links -->
-  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-    integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
-    crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -29,6 +26,7 @@
   <nav class="navbar navbar-expand-lg" id="navbar">
     <div class="container-fluid">
       <a class="navbar-brand" href="index.html" id="logo"><span id="span1">E</span>Lectrix <span>Shop</span></a>
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span><img src="./images/menu.png" alt="" width="30px"></span>
@@ -60,20 +58,12 @@
             <a class="nav-link" href="contact.html">Contact</a>
           </li>
         </ul>
-        <form class="d-flex" id="search">
-          <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
-          <button class="btn btn-outline-success text-center" type="button" data-bs-toggle="modal"
-            data-bs-target="#card">Cart(<span class="total-count"></span>)</button>
-          <!-- <button class="btn btn-outline-success text-center" type="button" data-toggle="modal" data-target="#cart"><i
-              class="fa-solid fa-cart-shopping text-dark fs-3"></i>(<span class="total-count"></span>)</button> -->
-        </form>
+
       </div>
+
     </div>
   </nav>
   <!-- navbar -->
-
-
-
 
 
 
@@ -251,22 +241,23 @@
 
   <!-- Shopping Cart Modal -->
 
-  <div class="modal fade shoppingCard" id="card" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade shoppingCard mt-5" id="card" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header cart-header text-warning">
           <h1 class="modal-title fs-5" id="exampleModalLabel">Shopping Cart</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <table class="show-cart table">
+        <div class="modal-body show-cart ms-3">
 
-          </table>
-          <div>Total price: $<span class="total-cart"></span></div>
+
+
         </div>
+        <div class="ms-2 fs-5 fw-bold">Total price: <span class="total-price"></span></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Buy Now</button>
+          <button type="button" class="btn btn-warning">Buy Now</button>
         </div>
       </div>
     </div>
@@ -352,7 +343,11 @@
 
 
 
-
+  <div class="d-flex me-auto p-2 shoppingBtn" id="search">
+    <button class="btn btn-outline-success text-center text-dark" type="button" data-bs-toggle="modal"
+      data-bs-target="#card"><i class="fa-solid fa-cart-shopping text-dark fs-3"></i>(<span
+        class="total-count text-danger"></span>)</button>
+  </div>
 
 
   <a href="#" class="arrow"><i><img src="./images/arrow.png" alt=""></i></a>
@@ -369,13 +364,11 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
 
-
+  <!-- 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
     integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-    crossorigin="anonymous"></script>
-  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
-    integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
     crossorigin="anonymous"></script> -->
+
 
 </body>
 
